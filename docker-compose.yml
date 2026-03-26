@@ -1,0 +1,26 @@
+services:
+  cube:
+    image: cubejs/cube:latest
+    ports:
+      - "4001:4000"
+    volumes:
+      - ./cube.js:/cube/conf/cube.js
+      - ./model:/cube/conf/model
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: cube_dev
+      POSTGRES_USER: cube
+      POSTGRES_PASSWORD: cube
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

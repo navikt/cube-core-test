@@ -1,0 +1,26 @@
+cubes:
+  - name: orders
+    sql_table: orders
+
+    measures:
+      - name: count
+        type: count
+
+      - name: total_amount
+        sql: amount
+        type: sum
+        format: currency
+
+    dimensions:
+      - name: id
+        sql: id
+        type: number
+        primary_key: true
+
+      - name: status
+        sql: status
+        type: string
+
+      - name: created_at
+        sql: created_at
+        type: time

@@ -1,0 +1,60 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: cube-core-test
+  namespace: dataplattform
+  labels:
+    team: dataplattform
+spec:
+  image: {{ image }}
+  port: 4000
+
+  liveness:
+    path: /livez
+    initialDelay: 30
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 6
+
+  readiness:
+    path: /readyz
+    initialDelay: 20
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 6
+
+  # Cube.js does not expose Prometheus metrics natively
+  prometheus:
+    enabled: false
+
+  replicas:
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 80
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 1Gi
+
+  ingresses:
+    - https://cube-core-test.intern.dev.nav.no
+
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_17
+        tier: db-f1-micro
+        databases:
+          - name: cube-core-test-db
+            envVarPrefix: DB
+
+  envFrom:
+    - secret: cube-api-secret
+
+  env:
+    - name: CUBEJS_DEV_MODE
+      value: "true"
+    - name: CUBEJS_LOG_LEVEL
+      value: "info"
