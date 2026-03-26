@@ -58,3 +58,6 @@ spec:
       value: "true"
     - name: CUBEJS_LOG_LEVEL
       value: "info"
+    # CubeStore needs a writable directory. Nais mounts /tmp as an emptyDir.
+    - name: CUBESTORE_DATA_DIR
+      value: "/tmp/.cubestore"
