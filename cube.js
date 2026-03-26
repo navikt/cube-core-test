@@ -13,6 +13,7 @@ module.exports = {
     const ssl = process.env.DB_SSLROOTCERT
       ? {
           rejectUnauthorized: true,
+          checkServerIdentity: () => undefined,
           ca: fs.readFileSync(process.env.DB_SSLROOTCERT).toString(),
           cert: fs.readFileSync(process.env.DB_SSLCERT).toString(),
           key: fs.readFileSync(process.env.DB_SSLKEY).toString(),
