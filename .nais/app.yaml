@@ -65,3 +65,8 @@ spec:
       value: "nada-dev-db2e"
     - name: BQ_DATASET
       value: "dataproducts"
+    - name: BQ_BILLING_PROJECT
+      value: "dataplattform-dev-ae96"
+    # Google Cloud client libraries use this env var for the billing project
+    - name: GOOGLE_CLOUD_PROJECT
+      value: "dataplattform-dev-ae96"
