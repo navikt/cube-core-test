@@ -1,0 +1,101 @@
+cubes:
+  - name: dataproducts
+    data_source: bigquery
+    # Each row is a daily snapshot. Use the latest snapshot per product for current state,
+    # or keep all rows for historical/trend analysis.
+    sql: SELECT * FROM `nada-dev-db2e.dataproducts.dataproducts`
+
+    measures:
+      - name: count
+        type: count
+        description: Number of data products (use with latest_snapshot filter for current count)
+
+      - name: pii_count
+        type: count
+        filters:
+          - sql: "{pii} = TRUE"
+        description: Number of data products containing PII
+
+      - name: nav_internal_count
+        type: count
+        filters:
+          - sql: "{nav_internal} = TRUE"
+        description: Number of NAV-internal data products
+
+      - name: total_requesters
+        sql: requesters_count
+        type: sum
+        description: Total number of access requesters across all data products
+
+      - name: total_access
+        sql: access_count
+        type: sum
+        description: Total number of users with access across all data products
+
+      - name: avg_requesters
+        sql: requesters_count
+        type: avg
+        description: Average number of access requesters per data product
+
+      - name: avg_access
+        sql: access_count
+        type: avg
+        description: Average number of users with access per data product
+
+    dimensions:
+      - name: id
+        sql: id
+        type: string
+        primary_key: true
+
+      - name: name
+        sql: name
+        type: string
+
+      - name: owner
+        sql: owner
+        type: string
+
+      - name: type
+        sql: type
+        type: string
+        description: Type of data product (e.g. dataproduct, dataset)
+
+      - name: pii
+        sql: pii
+        type: boolean
+        description: Whether the data product contains personally identifiable information
+
+      - name: nav_internal
+        sql: nav_internal
+        type: boolean
+        description: Whether the data product is NAV-internal only
+
+      - name: created
+        sql: created
+        type: time
+
+      - name: last_modified
+        sql: last_modified
+        type: time
+
+      - name: version
+        sql: version
+        type: time
+        description: Snapshot timestamp — one row per data product per day
+
+    segments:
+      - name: latest_snapshot
+        # Filters to only the most recent daily snapshot per product.
+        # Use this segment for "current state" queries to avoid double-counting.
+        sql: >
+          {version} = (
+            SELECT MAX(version)
+            FROM `nada-dev-db2e.dataproducts.dataproducts`
+          )
+
+      - name: contains_pii
+        sql: "{pii} = TRUE"
+
+      - name: nav_internal_only
+        sql: "{nav_internal} = TRUE"

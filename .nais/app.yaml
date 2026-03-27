@@ -61,3 +61,7 @@ spec:
     # CubeStore needs a writable directory. Nais mounts /tmp as an emptyDir.
     - name: CUBESTORE_DATA_DIR
       value: "/tmp/.cubestore"
+    - name: BQ_PROJECT_ID
+      value: "nada-dev-db2e"
+    - name: BQ_DATASET
+      value: "dataproducts"
