@@ -10,7 +10,7 @@ cp .env.example .env
 docker compose up
 ```
 
-Cube.js Playground: http://localhost:4000
+Cube.js Playground: http://localhost:4001
 
 ## Environment variables
 
