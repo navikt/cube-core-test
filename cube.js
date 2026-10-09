@@ -10,11 +10,6 @@ const BigQueryDriver = require("@cubejs-backend/bigquery-driver");
  * https://cube.dev/docs/config
  */
 module.exports = {
-  dbType: ({ dataSource }) => {
-    if (dataSource === "bigquery") return "bigquery";
-    return "postgres";
-  },
-
   driverFactory: ({ dataSource }) => {
     if (dataSource === "bigquery") {
       return new BigQueryDriver({
